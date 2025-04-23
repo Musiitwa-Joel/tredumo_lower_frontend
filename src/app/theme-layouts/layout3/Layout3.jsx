@@ -194,7 +194,7 @@ function Layout3(props) {
         config={config}
         style={{
           // backgroundColor: "red",
-          minWidth: 1100,
+          // minWidth: 1100,
           // overflowX: "scroll",
         }}
       >
