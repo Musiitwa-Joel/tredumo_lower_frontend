@@ -1,0 +1,13 @@
+.sticky-column {
+    position: -webkit-sticky;
+    /* For Safari */
+    position: sticky;
+    right: 0;
+    /* background-color: white;
+    border-bottom-color: blue;
+    color: red; */
+    /* opacity: 0.7; */
+    /* Optional: to match the table background */
+    z-index: 100;
+    /* Ensure it is above other columns */
+}

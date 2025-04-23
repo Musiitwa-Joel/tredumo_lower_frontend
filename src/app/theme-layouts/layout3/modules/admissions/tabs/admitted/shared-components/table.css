@@ -1,0 +1,99 @@
+.muiltr-1jvhnvu-MuiPaper-root {
+    background-color: #fff;
+    color: rgb(17, 24, 39);
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    box-shadow: none;
+    background-image: none;
+    border-radius: 16px;
+    background-color: #f1f5f9;
+    background-image: unset;
+    /* background: linear-gradient(to left, #cce1ff, #a4d2ff); */
+    overflow: hidden;
+    transition: all 100ms ease-in-out;
+}
+
+.muiltr-ax6yga {
+    align-items: flex-start;
+    background-color: #fff;
+    display: grid;
+    flex-wrap: wrap-reverse;
+    min-height: 3.5rem;
+    overflow: hidden;
+    position: relative;
+    transition: all 150ms ease-in-out;
+    z-index: 1;
+    /* box-shadow: none; */
+    left: 0;
+    right: 0;
+    padding: 24px;
+}
+
+.muiltr-173t2s6 {
+    align-items: flex-start;
+    background-color: #f1f5f9;
+    display: grid;
+    flex-wrap: wrap-reverse;
+    min-height: 3.5rem;
+    overflow: hidden;
+    position: relative;
+    transition: all 150ms ease-in-out;
+    z-index: 1;
+    background: linear-gradient(to left, #f3f3f3, #dadcde);
+    /* padding: 24px; */
+}
+
+
+/* column resizor */
+.muiltr-1ug570k {
+    cursor: col-resize;
+    margin-right: -16px;
+    position: absolute;
+    padding-left: 3px;
+    padding-right: 3px;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.12);
+}
+
+/* rgb(249, 249, 249); */
+
+.muiltr-1llu0od {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    /* padding: 0.5rem; */
+    width: 100%;
+}
+
+.muiltr-ax6yga {
+    align-items: flex-start;
+    /* background-color: rgb(255, 255, 255); */
+    display: grid;
+    flex-wrap: wrap-reverse;
+    min-height: 3.5rem;
+    position: relative;
+    z-index: 1;
+    left: 0px;
+    right: 0px;
+    overflow: hidden;
+    transition: all 150ms ease-in-out 0s;
+    padding: 15px;
+}
+
+.muiltr-ax6yga {
+    align-items: flex-start;
+    /* background-color: #fff; */
+    display: grid;
+    flex-wrap: wrap-reverse;
+    min-height: 3.5rem;
+    overflow: hidden;
+    position: relative;
+    transition: all 150ms ease-in-out;
+    z-index: 1;
+    /* box-shadow: none; */
+    left: 0;
+    right: 0;
+    padding: 15px;
+}

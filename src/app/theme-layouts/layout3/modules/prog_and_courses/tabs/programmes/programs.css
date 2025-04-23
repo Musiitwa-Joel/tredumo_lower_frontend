@@ -1,0 +1,99 @@
+ .muiltr-1q153r3-MuiToolbar-root {
+     min-height: 40px;
+ }
+
+ .muiltr-1v1zwdr-MuiToolbar-root {
+     min-height: 40px;
+ }
+
+ .muiltr-1wfpga3-MuiToolbar-root {
+     min-height: 40px;
+ }
+
+ .custom-scroll {
+     height: 400px;
+     overflow-y: scroll;
+ }
+
+ .MuiTreeItem-groupTransition {
+     margin-left: 9px;
+     border-left: 1px dashed rgba(17, 24, 39, 0.4);
+ }
+
+ /* .Mui-focused,
+ .Mui-selected.Mui-focused {
+     background-color: rgba(212, 210, 210, 0.6);
+ } */
+
+ .muiltr-1lk46o2-MuiTreeItem-root .MuiTreeItem-content {
+     border-radius: 4px;
+     padding: 2px;
+     margin: 1.6px 0px;
+ }
+
+ .MuiTreeItem-iconContainer {
+     padding: 0px 9.6px;
+     width: 38px !important;
+ }
+
+ .disable-scrolling {
+     overflow: hidden;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+ }
+
+ /* .custom-scroll {
+     height: 400px;
+     overflow-y: auto;
+     overflow-x: hidden;
+
+ } */
+
+ .custom-scroll-table {
+     height: calc(100vh - 185px);
+     width: 100%;
+     /* background-color: rebeccapurple; */
+ }
+
+ .custom-scroll-height {
+     height: calc(100vh - 195px);
+     overflow-y: scroll;
+ }
+
+ .custom-scroll-height-modal {
+     /* height: calc(100vh - 300px); */
+ }
+
+ .custom-scroll-height-accordation {
+     height: 120px;
+     overflow: auto;
+     overflow-x: auto;
+ }
+
+ .custom-scroll-table-modal {
+     height: 365px;
+     overflow: auto;
+     overflow-x: auto;
+     /* background-color: red; */
+
+ }
+
+ .custom-scroll-table-modal-download {
+     height: 500px;
+     overflow: auto;
+     overflow-x: auto;
+     /* background-color: red; */
+
+ }
+
+ .custom-scroll-height-with-search {
+     height: calc(100vh - 240px);
+ }
+
+ .custom-scroll-height-without-search {
+     height: calc(100vh - 185px);
+ }
+
+ .sticky-table-head {
+     box-shadow: inset 0px -1.5px blue;
+ }

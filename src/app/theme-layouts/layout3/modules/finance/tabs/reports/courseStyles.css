@@ -1,0 +1,8 @@
+.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab,
+.ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab {
+  margin: 0;
+  padding: 8px;
+  /* background: white; */
+  border: 1px solid lightgray;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}

@@ -1,0 +1,87 @@
+/* Add Ant Design CSS */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
+body {
+  margin: 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f0f2f5;
+}
+
+/* Custom styles for icons */
+.text-success {
+  color: #52c41a;
+}
+
+.text-error {
+  color: #ff4d4f;
+}
+
+.text-warning {
+  color: #faad14;
+}
+
+/* Ant Design table customizations */
+.ant-table-small .ant-table-thead > tr > th {
+  background-color: #fafafa;
+}
+
+.ant-table-small .ant-table-tbody > tr > td {
+  padding: 8px 16px;
+}
+
+/* Card styles */
+.ant-card {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+}
+
+/* Statistics customizations */
+.ant-statistic-title {
+  margin-bottom: 8px !important;
+}
+
+.ant-progress {
+  margin-top: 8px !important;
+}
+
+/* Modal customizations */
+.ant-modal-content {
+  padding: 0;
+}
+
+.ant-modal-header {
+  margin: 0;
+  padding: 16px 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.ant-modal-body {
+  padding: 24px;
+}
+
+.ant-modal-footer {
+  margin: 0;
+  padding: 16px 24px;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* Timeline customizations */
+.ant-timeline {
+  margin-top: 16px;
+}
+
+.ant-timeline-item-content {
+  margin-left: 28px;
+}
+
+/* List customizations */
+.ant-list-item-meta-title {
+  margin-bottom: 4px !important;
+}
+
+/* Avatar customizations */
+.ant-avatar {
+  background-color: #1890ff;
+}

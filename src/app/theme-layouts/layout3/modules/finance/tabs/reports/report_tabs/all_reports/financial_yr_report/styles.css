@@ -1,0 +1,9 @@
+.custom-table .ant-table-thead > tr > th {
+  background-color: #0832b7;
+  color: white;
+  border-radius: 0px !important;
+}
+.statistic-value {
+  font-size: 14px;
+  white-space: nowrap;
+}

@@ -1,0 +1,19 @@
+.rdg {
+    border: 1px solid #ccc;
+    /* Add border around the table */
+}
+
+.rdg-row {
+    border-bottom: 1px solid #ddd;
+    /* Add row borders */
+}
+
+.rdg-cell {
+    border-right: 1px solid #ddd;
+    /* Add column borders */
+}
+
+.rdg-cell:last-child {
+    border-right: none;
+    /* Remove right border for last column */
+}

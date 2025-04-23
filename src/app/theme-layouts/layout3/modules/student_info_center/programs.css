@@ -1,0 +1,86 @@
+ .muiltr-1q153r3-MuiToolbar-root {
+     min-height: 40px;
+ }
+
+ .muiltr-1v1zwdr-MuiToolbar-root {
+     min-height: 40px;
+ }
+
+ .muiltr-1wfpga3-MuiToolbar-root {
+     min-height: 40px;
+ }
+
+
+ /* Hide the default ink bar */
+ /* .ant-tabs-ink-bar {
+     display: none;
+ }
+
+ :where(.css-dev-only-do-not-override-lizu9z).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+
+     text-shadow: 0 0 0.25px currentcolor;
+     background-color: rgb(149, 156, 169);
+     border-radius: 9999px;
+     width: 100%;
+     height: 100%;
+     opacity: 0.2;
+ } */
+
+ :where(.css-dev-only-do-not-override-lizu9z).ant-tabs .ant-tabs-ink-bar {
+     position: absolute;
+     height: 2px;
+     /* Set the height to match the MUI style */
+     bottom: 0;
+     width: 100%;
+     /* Fill the width of the tab */
+     /* background-color: #1e293b; */
+
+     /* MUI indicator color */
+     transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+     /* Smooth transition */
+     display: none;
+ }
+
+ /* .ant-tabs .ant-tabs-tab {
+     position: relative;
+     -webkit-touch-callout: none;
+     -webkit-tap-highlight-color: transparent;
+     display: inline-flex;
+     align-items: center;
+     padding: 8px 0;
+     font-size: 14px;
+     background: transparent;
+     border: 0;
+     outline: none;
+     cursor: pointer;
+     color: lightgray;
+ } */
+
+ /* Ensure the tab fills the available space */
+ :where(.css-dev-only-do-not-override-lizu9z).ant-tabs .ant-tabs-tab.ant-tabs-tab-active {
+     display: flex;
+     width: 100%;
+     height: 100%;
+     padding: 0;
+     box-sizing: border-box;
+     /* Add transition for smooth effects */
+     transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+ }
+
+ /* Make the button inside the active tab fill the full width and height */
+ :where(.css-dev-only-do-not-override-lizu9z).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+     /* color: #fff; */
+     text-shadow: 0 0 0.25px currentcolor;
+     background: rgba(149, 156, 169, 0.2);
+     border-radius: 9999px;
+     /* Fully rounded for the oval shape */
+     width: 100%;
+     /* Add a small amount of horizontal space */
+     height: 75%;
+     /* Full height */
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     box-sizing: border-box;
+     transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+ }

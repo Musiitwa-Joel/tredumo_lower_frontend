@@ -1,0 +1,26 @@
+:where(.css-dev-only-do-not-override-4ox2zp).ant-card .ant-card-head {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  margin-bottom: -1px;
+
+  color: rgba(0, 0, 0, 0.88);
+  font-weight: 600;
+
+  background: #f4f4f4;
+  border-bottom: 1px solid lightgray;
+  border-radius: 8px 8px 0 0;
+}
+
+/* .ant-card .ant-card-head {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: -1px;
+    color: rgba(0, 0, 0, 0.88);
+    font-weight: 600;
+    background: #f4f4f4;
+    border-bottom: 1px solid lightgray;
+    border-radius: 8px 8px 0 0;
+} */

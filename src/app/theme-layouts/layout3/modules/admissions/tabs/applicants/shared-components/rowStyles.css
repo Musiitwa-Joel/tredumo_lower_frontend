@@ -1,0 +1,9 @@
+.custom-selected-row {
+    background-color: #e6f2ff !important;
+    /* Light blue */
+}
+
+.custom-selected-row:hover {
+    background-color: #cce5ff !important;
+    /* Keep selected color on hover */
+}

@@ -1,0 +1,17 @@
+.custom-table .ant-table-thead > tr > th {
+  background-color: #0832b7;
+  color: white;
+  border-radius: 0px !important;
+}
+.custom-table .ant-table {
+  border: 1px solid #f0f0f0;
+}
+
+.custom-table .ant-table-tbody > tr > td {
+  /* text-align: center; */
+}
+
+.ant-modal-title {
+  font-size: 20px;
+  font-weight: bold;
+}

@@ -1,0 +1,22 @@
+/* MyStyles.css */
+.custom-collapse .ant-collapse-header {
+  background-color: #f0f0f0 !important; /* Change this to your desired header color */
+  color: #210e66 !important; /* Change this to your desired header text color */
+}
+
+.custom-collapse .ant-collapse-content > .ant-collapse-content-box {
+  padding: 0px 0px !important;
+}
+:where(.css-dev-only-do-not-override-qunspc).ant-collapse
+  .ant-collapse-content
+  > .ant-collapse-content-box {
+  padding: 0px 0px !important;
+}
+.custom-table .ant-table-thead > tr > th {
+  background-color: #0832b7;
+  color: white;
+  border-radius: 0px !important;
+}
+element.style {
+  margin: 0px;
+}

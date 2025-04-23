@@ -1,0 +1,6 @@
+.myapp:hover {
+    /* border-width: 1px; */
+    /* border-color: black; */
+    background-color: rgba(255, 255, 255, 0.1);
+    transition-duration: 0.5s;
+}

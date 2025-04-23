@@ -1,0 +1,17 @@
+.custom-table .ant-table-thead > tr > th {
+  background-color: #0832b7;
+  color: white;
+  border-radius: 0px !important;
+}
+.custom-table .ant-table-cell {
+  padding: 4px 8px; /* Reduce padding in table cells */
+}
+
+.custom-table .ant-table-tbody > tr > td {
+  height: 30px; /* Reduce row height */
+}
+
+.custom-table .ant-table-thead > tr > th {
+  padding: 4px 8px; /* Reduce padding in header cells */
+  height: 30px; /* Reduce header row height */
+}

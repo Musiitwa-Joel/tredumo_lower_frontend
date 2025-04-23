@@ -1,0 +1,18 @@
+:where(.css-dev-only-do-not-override-d2lrxs).ant-descriptions.ant-descriptions-bordered>.ant-descriptions-view {
+    overflow: hidden;
+    border: 1px solid rgba(5, 5, 5, 0.1) !important;
+}
+
+::where(.css-dev-only-do-not-override-d2lrxs).ant-descriptions.ant-descriptions-bordered>.ant-descriptions-view .ant-descriptions-row {
+    border-bottom: 1px solid rgba(5, 5, 5, 0.1) !important;
+}
+
+:where(.css-dev-only-do-not-override-d2lrxs).ant-descriptions .ant-descriptions-item-container .ant-descriptions-item-label {
+    /* display: inline-flex; */
+    align-items: baseline;
+}
+
+:where(.css-dev-only-do-not-override-d2lrxs).ant-descriptions .ant-descriptions-item-container .ant-descriptions-item-label {
+    display: block !important;
+    align-items: baseline;
+}

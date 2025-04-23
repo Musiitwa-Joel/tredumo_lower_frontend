@@ -1,0 +1,24 @@
+.nkumba-header {
+  background-color: #4582de;
+  color: white;
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+}
+
+.reference-card {
+  margin-bottom: 16px;
+  border-left: 4px solid #4582de;
+}
+
+.status-completed {
+  color: #52c41a;
+}
+
+.status-pending {
+  color: #faad14;
+}
+
+.status-failed {
+  color: #ff4d4f;
+}
