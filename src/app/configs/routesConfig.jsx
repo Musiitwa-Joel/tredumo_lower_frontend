@@ -125,6 +125,10 @@ const SmeHub = lazy(
   () => import("app/theme-layouts/layout3/modules/sme_hub/SmeHub")
 );
 
+const Mel = lazy(
+  () => import("app/theme-layouts/layout3/modules/mel/Mel")
+);
+
 const MemoizedProgramsAndCourses = memo(ProgramsAndCourses);
 const MemoizedAdmissions = memo(Admissions);
 const MemoizedSetup = memo(Setup);
@@ -147,6 +151,7 @@ const MemoizedLibrary = memo(Library);
 const MemoizedRims = memo(Rims);
 const MemoizedJobs = memo(Jobs);
 const MemoizedSmeHub = memo(SmeHub);
+const MemoizedMel = memo(Mel);
 
 const routeConfigs = [ExampleConfig, SignOutConfig, SignInConfig, SignUpConfig];
 /**
@@ -211,6 +216,14 @@ const routes = [
     element: (
       <ProtectedRoute>
         <MemoizedJobs />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "mel",
+    element: (
+      <ProtectedRoute>
+        <MemoizedMel />
       </ProtectedRoute>
     ),
   },

@@ -55,7 +55,7 @@ const Rims = () => {
           src={activeApp?.url}
           style={{
             width: "100%",
-            height: "100%",
+           height: "calc(100vh - 90px)",
             border: "none",
             display: loading ? "none" : "block",
           }}

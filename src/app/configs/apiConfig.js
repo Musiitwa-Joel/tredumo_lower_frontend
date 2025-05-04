@@ -5,7 +5,7 @@ const url = "https://tredumo.com/cid_api";
 const webSocketUrl = "ws://tredumo.com/graphql";
 const url2 = "https://tredumo.com/api";
 
-// const mainUrl = "http://localhost:2323/graphql";
+// const url = "http://localhost:8000";
 // const webSocketUrl = "ws://localhost:2323/graphql";
 // const url2 = "http://localhost:2222";
 
