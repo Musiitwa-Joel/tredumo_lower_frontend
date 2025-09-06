@@ -10,7 +10,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 const client = new ApolloClient({
   // uri: "http://localhost:9000/graphql",
-  uri: "https://tredumo.com/tredumo_lower_server",
+  uri: "https://tredumo.com/tredumo_lower_server/graphql",
   cache: new InMemoryCache(),
 });
 
