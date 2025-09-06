@@ -6,8 +6,13 @@ import "./styles/app-utilities.css";
 import { createRoot } from "react-dom/client";
 import App from "./app/App";
 import { ConfigProvider, theme } from "antd";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
-
+const client = new ApolloClient({
+  // uri: "http://localhost:9000/graphql",
+  uri: "https://tredumo.com/tredumo_lower_server",
+  cache: new InMemoryCache(),
+});
 
 const container = document.getElementById("root");
 
@@ -17,15 +22,13 @@ if (!container) {
 
 const root = createRoot(container);
 root.render(
-  // <ApolloProvider client={client}>
-  <ConfigProvider
-    theme={
-      {
-        // algorithm: [theme.compactAlgorithm],
-      }
-    }
-  >
-    <App />
-  </ConfigProvider>
-  // </ApolloProvider>
+  <ApolloProvider client={client}>
+    <ConfigProvider
+      theme={{
+        algorithm: [theme.compactAlgorithm],
+      }}
+    >
+      <App />
+    </ConfigProvider>
+  </ApolloProvider>
 );

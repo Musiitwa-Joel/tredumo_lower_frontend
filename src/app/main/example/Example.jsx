@@ -28,7 +28,7 @@ function Example(props) {
             className="w-full p-12 pt-16 sm:pt-24 lg:ltr:pr-0 lg:rtl:pl-0"
             style={{
               backgroundColor: "rgba(81, 53, 3, 0.05)",
-              height: "calc(100vh - 265px)",
+              height: "calc(100vh - 190px)",
             }}
           >
             {selectedTab == "apps" && <Apps />}

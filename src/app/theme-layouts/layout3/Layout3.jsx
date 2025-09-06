@@ -192,11 +192,13 @@ function Layout3(props) {
         id="fuse-layout"
         className="w-full flex"
         config={config}
-        style={{
-          // backgroundColor: "red",
-          // minWidth: 1100,
-          // overflowX: "scroll",
-        }}
+        style={
+          {
+            // backgroundColor: "red",
+            // minWidth: 1100,
+            // overflowX: "scroll",
+          }
+        }
       >
         <Backdrop
           sx={{
@@ -347,14 +349,14 @@ function Layout3(props) {
               // />
             )} */}
 
-            {config.toolbar.display && currentRoute.pathname == "/example" && (
+            {/* {config.toolbar.display && currentRoute.pathname == "/example" && (
               <ToolbarLayout3
                 className={clsx(
                   config.toolbar.style === "fixed" && "sticky top-0",
                   config.toolbar.position === "above" && "order-first z-40"
                 )}
               />
-            )}
+            )} */}
 
             {/* <div className="sticky top-0 z-99">
               <Settings />

@@ -8,6 +8,8 @@ const initialState = {
   taskBarApps: [],
   exists: false,
   isLocked: false,
+  systemSettings: [],
+  appTheme: null,
 };
 
 export const appsSlice = createSlice({
@@ -19,6 +21,12 @@ export const appsSlice = createSlice({
     },
     updateApps: (state, action) => {
       state.apps = action.payload;
+    },
+    setSystemSettings: (state, action) => {
+      state.systemSettings = action.payload;
+    },
+    setAppTheme: (state, action) => {
+      state.appTheme = action.payload;
     },
     addAppToTaskBar: (state, action) => {
       return { ...state, taskBarApps: action.payload };
@@ -83,12 +91,16 @@ export const {
   admissionsTabChanged,
   saveStaffMembers,
   setIsLocked,
+  setSystemSettings,
+  setAppTheme,
 } = appsSlice.actions;
 
 export const appsVisible = ({ apps }) => apps;
 
 export const selectIsLocked = (state) => state.apps.isLocked;
 export const selectActiveApp = (state) => state.apps.activeApp;
+export const selectSystemSettings = (state) => state.apps.systemSettings;
+export const selectAppTheme = (state) => state.apps.appTheme;
 
 // export const selectUserShortcuts = ({ user }) => user.data.shortcuts;
 

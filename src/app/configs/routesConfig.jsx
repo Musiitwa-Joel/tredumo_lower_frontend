@@ -12,27 +12,8 @@ import Example from "../main/example/Example";
 import SignInPage from "../main/sign-in/SignInPage";
 import OtpVerification from "../main/sign-in/OtpPage";
 import ChangePassword from "../main/sign-in/ChangePassword";
-// import Admissions from "app/theme-layouts/layout3/modules/admissions/Admissions";
-// import Setup from "app/theme-layouts/layout3/modules/setup/Setup";
-// import ProgramsAndCourses from "app/theme-layouts/layout3/modules/prog_and_courses/ProgramsAndCourses";
-// import EducationMonitoring from "app/theme-layouts/layout3/modules/education_monitoring/EducationMonitoring";
-// import PhotosManager from "app/theme-layouts/layout3/modules/photos_manager/PhotosManager";
-// import Elearning from "app/theme-layouts/layout3/modules/elearning/Elearning";
-// import StudentInformationCenter from "app/theme-layouts/layout3/modules/student_info_center/StudentInformationCenter";
-// import FeesMgt from "app/theme-layouts/layout3/modules/fees_mgt/FeesMgt";
-// import Registration from "app/theme-layouts/layout3/modules/registration/Registration";
 import ProtectedRoute from "../auth/ProtectedRoute";
 import FullScreenUnlockSessionPage from "../main/unlock-session/FullScreenUnlockSessionPage";
-// import Finance from "app/theme-layouts/layout3/modules/finance/Finance";
-// import TredPay from "app/theme-layouts/layout3/modules/tredpay/TredPay";
-// import SystemAccess from "app/theme-layouts/layout3/modules/system_access/SystemAccess";
-// import HR from "app/theme-layouts/layout3/modules/hr/HR";
-// import ResultsMgt from "app/theme-layouts/layout3/modules/results_mgt/ResultsMgt";
-// import Alumni from "app/theme-layouts/layout3/modules/alumini/Alumni";
-// import Voting from "app/theme-layouts/layout3/modules/voting/Voting";
-// import Counselling from "app/theme-layouts/layout3/modules/counselling/Counselling";
-// import Graduation from "app/theme-layouts/layout3/modules/graduation/Graduation";
-// import Library from "app/theme-layouts/layout3/modules/library/Library";
 
 const ProgramsAndCourses = lazy(
   () =>
@@ -125,9 +106,7 @@ const SmeHub = lazy(
   () => import("app/theme-layouts/layout3/modules/sme_hub/SmeHub")
 );
 
-const Mel = lazy(
-  () => import("app/theme-layouts/layout3/modules/mel/Mel")
-);
+const Mel = lazy(() => import("app/theme-layouts/layout3/modules/mel/Mel"));
 
 const MemoizedProgramsAndCourses = memo(ProgramsAndCourses);
 const MemoizedAdmissions = memo(Admissions);

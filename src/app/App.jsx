@@ -8,11 +8,19 @@ import { selectCurrentLanguageDirection } from "app/store/i18nSlice";
 import themeLayouts from "app/theme-layouts/themeLayouts";
 import { selectMainTheme } from "@fuse/core/FuseSettings/fuseSettingsSlice";
 // import MockAdapterProvider from "@mock-api/MockAdapterProvider";
-import { useAppSelector } from "app/store/hooks";
-import { useSelector } from "react-redux";
+import { useAppSelector, useAppDispatch } from "app/store/hooks";
+import { useDispatch, useSelector } from "react-redux";
 import withAppProviders from "./withAppProviders";
 import AuthenticationProvider from "./auth/AuthenticationProvider";
 import { useEffect, useState } from "react";
+import { useQuery } from "@apollo/client";
+import { LOAD_SYSTEM_SETTINGS } from "./gql/queries";
+import FuseSplashScreen from "@fuse/core/FuseSplashScreen";
+import {
+  selectSystemSettings,
+  setAppTheme,
+  setSystemSettings,
+} from "./store/appSlice";
 // import axios from 'axios';
 /**
  * Axios HTTP Request defaults
@@ -37,31 +45,37 @@ const emotionCacheOptions = {
  * The main App component.
  */
 function App() {
-  // const [token, setToken] = useState(null);
-
+  // load system settings here
+  const { loading, error, data } = useQuery(LOAD_SYSTEM_SETTINGS);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const handleMessage = (event) => {
-      if (event.origin !== "http://localhost:3000") return;
-
-      if (event.data.type === "AUTH_TOKEN") {
-        const token = event.data.token;
-        console.log("Token From Post Message", token);
-      }
-    };
-
-    window.addEventListener("message", handleMessage);
-
-    return () => {
-      window.removeEventListener("message", handleMessage);
-    };
-  }, []);
+    if (data) {
+      const dbTheme = data.system_settings?.find(
+        (setting) => setting.setting_title == "theme"
+      )?.setting_value;
+      dispatch(setAppTheme(dbTheme));
+    }
+  }, [data]);
 
   const langDirection = useAppSelector(selectCurrentLanguageDirection);
   /**
    * The main theme from the Redux store.
    */
   const mainTheme = useSelector(selectMainTheme);
+  
+  // Block app rendering until system settings query resolves
+  if (loading) {
+    return <FuseSplashScreen />;
+  }
+
+  if (error) {
+    return (
+      <div className="p-24 text-center">
+        Failed to load system settings. Please refresh.
+      </div>
+    );
+  }
   return (
     // <MockAdapterProvider>
     <CacheProvider value={createCache(emotionCacheOptions[langDirection])}>
