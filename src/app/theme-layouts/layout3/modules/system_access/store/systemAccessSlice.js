@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { rootReducer } from "app/store/lazyLoadedSlices";
-import { setUserSettings } from "src/app/auth/user/store/userSlice";
 
 const initialState = {
   activeTab: 0,
@@ -14,16 +13,14 @@ const initialState = {
   loadingRoleModules: false,
   selectedPermissions: [],
   selectedUser: null,
-  users: [],
+  userActionLogs: [],
+  selectedSystemUser: null,
 };
 
 export const systemAccessSlice = createSlice({
   name: "systemAccess",
   initialState,
   reducers: {
-    setUsers: (state, action) => {
-      state.users = action.payload;
-    },
     setActiveTab: (state, action) => {
       state.activeTab = action.payload;
     },
@@ -57,10 +54,15 @@ export const systemAccessSlice = createSlice({
     setSelectedUser: (state, action) => {
       state.selectedUser = action.payload;
     },
+    setUserActionLogs: (state, action) => {
+      state.userActionLogs = action.payload;
+    },
+    setSelectedSystemUser: (state, action) => {
+      state.selectedSystemUser = action.payload;
+    }
   },
 
   selectors: {
-    selectUsers: (state) => state.users,
     selectActiveTab: (state) => state.activeTab,
     selectAllRoles: (state) => state.allRoles,
     selectCreateRoleModalVisible: (state) => state.createRoleModalVisible,
@@ -72,6 +74,8 @@ export const systemAccessSlice = createSlice({
     selectRoleModules: (state) => state.roleModules,
     selectSelectedPermissions: (state) => state.selectedPermissions,
     selectSelectedUser: (state) => state.selectedUser,
+    selectUserActionLogs: (state) => state.userActionLogs,
+    selectSelectedSystemUser: (state) => state.selectedSystemUser,
   },
 });
 /**
@@ -80,7 +84,6 @@ export const systemAccessSlice = createSlice({
 rootReducer.inject(systemAccessSlice);
 const injectedSlice = systemAccessSlice.injectInto(rootReducer);
 export const {
-  setUsers,
   setActiveTab,
   setAllRoles,
   setCreateRoleModalVisible,
@@ -92,10 +95,11 @@ export const {
   setRoleModules,
   setSelectedPermissions,
   setSelectedUser,
+  setUserActionLogs,
+  setSelectedSystemUser,
 } = systemAccessSlice.actions;
 
 export const {
-  selectUsers,
   selectActiveTab,
   selectAllRoles,
   selectCreateRoleModalVisible,
@@ -107,5 +111,7 @@ export const {
   selectRoleModules,
   selectSelectedPermissions,
   selectSelectedUser,
+  selectUserActionLogs,
+  selectSelectedSystemUser,
 } = injectedSlice.selectors;
 export default systemAccessSlice.reducer;

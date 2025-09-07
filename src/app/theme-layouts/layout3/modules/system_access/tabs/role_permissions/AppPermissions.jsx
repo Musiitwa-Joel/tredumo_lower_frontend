@@ -31,6 +31,15 @@ const permissionsConfig = {
     { name: "can_upload_employees", label: "Can Upload Employees" },
     { name: "can_delete_employees", label: "Can Delete Employees" },
   ],
+  results_manager: [
+    { name: "can_view_results", label: "Can View Results" },
+    { name: "can_upload_results", label: "Can Upload Results" },
+    {
+      name: "can_upload_migrated_results",
+      label: "Can Upload Migrated Results",
+    },
+    { name: "can_delete_results", label: "Can Delete Results" },
+  ],
 };
 
 // Main Permissions Component

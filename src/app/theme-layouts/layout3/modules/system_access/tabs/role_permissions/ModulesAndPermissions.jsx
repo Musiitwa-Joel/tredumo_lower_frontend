@@ -247,16 +247,7 @@ const ModulesAndPermissions = () => {
 
   return (
     <>
-      <Form
-        // labelCol={{
-        //   span: 8,
-        // }}
-        // wrapperCol={{
-        //   span: 16,
-        // }}
-        onFinish={onFinish}
-        form={form}
-      >
+      <Form onFinish={onFinish} form={form}>
         <Spin
           spinning={loadingRoleModules || loading}
           tip="Loading"

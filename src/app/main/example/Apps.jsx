@@ -72,7 +72,7 @@ const apps = [
   {
     id: "7",
     title: "Academics",
-    route: "rims",
+    route: "academics",
     logo: `${url}/logos/academics.png`,
   },
   {
@@ -97,7 +97,7 @@ const apps = [
   {
     id: "11",
     title: "System Access",
-    route: "rims",
+    route: "system_access",
     logo: `${url}/logos/config.png`,
   },
   {

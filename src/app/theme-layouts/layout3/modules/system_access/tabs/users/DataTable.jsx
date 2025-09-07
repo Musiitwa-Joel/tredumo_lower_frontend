@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import {
   Button,
@@ -19,7 +19,7 @@ import {
   ManageAccounts,
   Refresh,
 } from "@mui/icons-material";
-// import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -27,14 +27,9 @@ import { showMessage } from "@fuse/core/FuseMessage/fuseMessageSlice";
 import { Box } from "@mui/material";
 
 import convertTimestampToDate from "app/theme-layouts/layout3/utils/convertTimestampToDate";
-// import { LOAD_USERS } from "../../gql/queries";
-import formatDateString from "app/theme-layouts/layout3/utils/formatDateString";
-import {
-  selectUsers,
-  setSelectedUser,
-  setUsers,
-} from "../../store/systemAccessSlice";
-import api from "app/configs/api";
+import { LOAD_USERS } from "../../gql/queries";
+import formatDateString from "app/theme-layouts/layout3/utils/formatDateToDateAndTime";
+import { setSelectedUser } from "../../store/systemAccessSlice";
 
 const { Search } = Input;
 
@@ -73,32 +68,27 @@ function searchFeesItemsByTerm(data, term) {
 
 const DataTable = React.memo(() => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  const users = useSelector(selectUsers);
 
-  const loadUsers = async () => {
-    try {
-      setLoading(true);
-      const response = await api.get("/api/users");
-      setLoading(false);
-  
-      dispatch(setUsers(response.data.result));
-
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      dispatch(
-        showMessage({
-          message: error.response.data.message,
-          variant: "error",
-        })
-      )
-      setLoading(false);
-    }
-  };
+  // console.log("fees categories", feesCategories);
+  const {
+    loading,
+    error,
+    data: loaddRes,
+    refetch,
+  } = useQuery(LOAD_USERS, {
+    notifyOnNetworkStatusChange: true,
+  });
 
   useEffect(() => {
-    loadUsers();
-  }, []);
+    if (error) {
+      dispatch(
+        showMessage({
+          message: error.message,
+          variant: "error",
+        })
+      );
+    }
+  }, [error]);
 
   const onSearch = (value) => {
     console.log("search:", value);
@@ -110,19 +100,6 @@ const DataTable = React.memo(() => {
 
     // dispatch(setFilteredFeesItems(filtered));
   };
-
-  const handleDelete = async (e, row) => {
-    setLoading(true);
-    const res = await api.delete(`/api/users/${row.user.id}`);
-    setLoading(false);
-    dispatch(
-      showMessage({
-        message: res.data.message,
-        variant: "success",
-      })
-    );
-    loadUsers();
-  }
 
   const columns2 = [
     {
@@ -136,17 +113,16 @@ const DataTable = React.memo(() => {
       title: "Name",
       dataIndex: "name",
       render: (text, record, index) =>
-        `${record.user.first_name} ${record.user.other_names}`,
-      width: "25%",
+        `${record.biodata.salutation} ${record.biodata.surname} ${record.biodata.other_names}`,
+      width: "30%",
       key: "name",
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      render: (text, record, index) => record.user.email,
-      width: "25%",
-      key: "email",
-      ellipsis: true,
+      title: "Role",
+      dataIndex: "role",
+      render: (text, record, index) => record.role.role_name,
+      width: "20%",
+      key: "name",
     },
     {
       title: "Last Active",
@@ -154,7 +130,15 @@ const DataTable = React.memo(() => {
       key: "created_on",
       width: "30%",
       render: (text, record, index) =>
-        record.lastLogin ? formatDateString(record.lastLogin.logged_in) : "_",
+        record.last_logged_in[0]
+          ? formatDateString(
+              parseInt(
+                record.last_logged_in[0]
+                  ? record.last_logged_in[0].logged_in
+                  : "_"
+              )
+            )
+          : "_",
       ellipsis: true,
     },
 
@@ -163,12 +147,12 @@ const DataTable = React.memo(() => {
       key: "operation",
       render: (text, record, index) => (
         <Space size="middle">
-          <Tooltip title={"Edit User Details"} placement="bottom">
+          <Tooltip title={"Change user role"} placement="bottom">
             <Button
               size="small"
               type="primary"
               ghost
-              // onClick={() => handleRowClick(record)}
+              onClick={() => handleRowClick(record)}
               icon={<ManageAccounts />}
             />
           </Tooltip>
@@ -179,7 +163,7 @@ const DataTable = React.memo(() => {
               <br />
               This action can not be undone
             </>
-            onConfirm={(e) => handleDelete(e, record)}
+            onConfirm={(e) => confirm(e, record)}
             // onCancel={cancel}
             okText="Yes"
             okButtonProps={{
@@ -259,11 +243,8 @@ const DataTable = React.memo(() => {
         <Box
           sx={{
             backgroundColor: "#fff",
-            // borderColor: "lightgray",
-            // borderWidth: 1,
-            borderLeft: "1px solid lightgray",
-            borderRight: "1px solid lightgray",
-            borderTop: "1px solid lightgray",
+            borderColor: "lightgray",
+            borderWidth: 1,
             // marginBottom: 1,
           }}
           className="p-5"
@@ -285,7 +266,7 @@ const DataTable = React.memo(() => {
               color="inherit"
               component="div"
               style={{
-                fontSize: "1.8rem",
+                fontSize: "2rem",
 
                 fontWeight: "500",
                 // visibility: selectedTreeItem ? "visible" : "hidden",
@@ -333,7 +314,7 @@ const DataTable = React.memo(() => {
             bordered
             size="small"
             columns={columns2}
-            dataSource={users}
+            dataSource={loaddRes ? loaddRes.users : []}
             loading={loading}
             pagination={false}
             scroll={{

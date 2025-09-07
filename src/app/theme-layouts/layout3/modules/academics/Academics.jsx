@@ -3,13 +3,17 @@ import { useEffect, useState, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import FuseLoading from "@fuse/core/FuseLoading";
 import Box from "@mui/material/Box";
-import { selectActiveTab, setActiveTab } from "./store/systemAccessSlice";
-import RolePermissions from "./tabs/role_permissions/RolePermissions";
-import Users from "./tabs/users/Users";
+import { selectActiveTab, setActiveTab } from "./store/academicsSlice";
 import AppNav from "../../components/AppNav";
-import SystemLogs from "./tabs/system_logs/SystemLogs";
 
-const tabs = ["Role Permissions", "Users", "System Logs", "Other Configs"];
+const tabs = [
+  "Timetables", // Manage lesson schedules
+  "Subjects", // Manage subjects per class/level
+  "Classes & Sections", // Organize grades, streams, and divisions
+  "Class Management", // Assign teachers, promote students, manage enrollments
+  "Exams & Grading", // Manage exams, marks entry, results, and reports
+  "Syllabus & Curriculum", // Manage syllabus, curriculum plans, and academic structure
+];
 
 function SystemAccess() {
   const dispatch = useDispatch();
@@ -32,6 +36,10 @@ function SystemAccess() {
     dispatch(setActiveTab(value));
   }
 
+  function Div() {
+    return <div>Role Permissions Content</div>;
+  }
+
   return loading ? (
     <FuseLoading logo={activeApp?.logo} />
   ) : (
@@ -45,9 +53,9 @@ function SystemAccess() {
             handleTabChange={handleTabChange}
           />
 
-          {activeTab === 0 && <RolePermissions />}
-          {activeTab === 1 && <Users />}
-          {activeTab === 2 && <SystemLogs />}
+          {activeTab === 0 && <Div />}
+          {activeTab === 1 && <Div />}
+          {activeTab === 2 && <Div />}
         </Box>
       </Suspense>
     </>

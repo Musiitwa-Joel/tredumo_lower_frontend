@@ -51,6 +51,9 @@ const StudentInformationCenter = lazy(
       "app/theme-layouts/layout3/modules/student_info_center/StudentInformationCenter"
     )
 );
+const Academics = lazy(
+  () => import("app/theme-layouts/layout3/modules/academics/Academics")
+);
 
 const FeesMgt = lazy(
   () => import("app/theme-layouts/layout3/modules/fees_mgt/FeesMgt")
@@ -131,6 +134,7 @@ const MemoizedRims = memo(Rims);
 const MemoizedJobs = memo(Jobs);
 const MemoizedSmeHub = memo(SmeHub);
 const MemoizedMel = memo(Mel);
+const MemoizedAcademics = memo(Academics);
 
 const routeConfigs = [ExampleConfig, SignOutConfig, SignInConfig, SignUpConfig];
 /**
@@ -347,6 +351,14 @@ const routes = [
     element: (
       <ProtectedRoute>
         <MemoizedGraduation />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "academics",
+    element: (
+      <ProtectedRoute>
+        <MemoizedAcademics />
       </ProtectedRoute>
     ),
   },

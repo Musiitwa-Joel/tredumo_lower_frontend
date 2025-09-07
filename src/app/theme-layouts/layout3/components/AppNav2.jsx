@@ -1,36 +1,26 @@
 import React from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Tabs,
-  Tab,
-  Box,
-  Tooltip,
-  IconButton,
-  Avatar,
-  Menu,
-  MenuItem,
-} from "@mui/material";
+import { AppBar, Toolbar, Typography, Tabs, Tab, Box } from "@mui/material";
 import UserMenu from "app/theme-layouts/shared-components/UserMenu";
+import { selectAppTheme } from "app/store/appSlice";
+import { useSelector } from "react-redux";
+import _ from "lodash";
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
-const AppNav2 = ({ activeApp, tabs, activeTab, handleTabChange }) => {
+const AppNav2 = ({
+  activeApp,
+  tabs,
+  activeTab,
+  handleTabChange,
+  dirtyFields = {},
+  isValid = true,
+}) => {
+  const appTheme = useSelector(selectAppTheme);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+
+  const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
+  const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
+  const handleCloseNavMenu = () => setAnchorElNav(null);
+  const handleCloseUserMenu = () => setAnchorElUser(null);
 
   return (
     <AppBar position="sticky">
@@ -39,9 +29,10 @@ const AppNav2 = ({ activeApp, tabs, activeTab, handleTabChange }) => {
         style={{
           display: "flex",
           justifyContent: "space-between",
+          backgroundColor: "red",
         }}
       >
-        {/* Logo and Title */}
+        {/* Logo & Title */}
         <div style={{ display: "flex", alignItems: "center" }}>
           <div style={{ marginRight: 10 }}>
             <img src={activeApp?.logo} alt="logo" width={30} height={30} />

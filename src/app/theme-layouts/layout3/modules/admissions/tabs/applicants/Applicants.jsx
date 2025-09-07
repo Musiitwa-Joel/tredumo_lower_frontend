@@ -13,14 +13,8 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useLazyQuery, useSuspenseQuery } from "@apollo/client";
-import {
-  GET_APPLICANT_REQS,
-  GET_PROGRAM_CHOICES,
-} from "app/theme-layouts/layout3/graphql/queries";
-// import {
-//   applicantReqsLoaded,
-//   saveProgramChoices,
-// } from "app/store/admissions/applicantsSlice";
+import { GET_PROGRAM_CHOICES } from "app/theme-layouts/layout3/graphql/queries";
+
 import {
   updateAccYr,
   updateIntake,
@@ -116,11 +110,6 @@ const Applicants = React.memo(function Applicants() {
   const handleChangeIntake = (event) => {
     dispatch(updateIntake(event.target.value));
   };
-
-  // if (loading) return console.log("loading...");
-  // if (error) {
-  //   return console.log("errorr", error);
-  // }
 
   if (progChoiceError) {
     return console.log("prog error", progChoiceError.message);

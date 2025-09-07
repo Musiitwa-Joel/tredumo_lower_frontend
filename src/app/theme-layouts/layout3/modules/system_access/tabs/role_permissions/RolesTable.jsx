@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import _ from "lodash";
 import clsx from "clsx";
 import { darken } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -10,25 +9,16 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Refresh from "@mui/icons-material/Refresh";
-import TextField from "@mui/material/TextField";
+import Button from "antd/lib/button";
 import Add from "@mui/icons-material/Add";
-import Dialog from "@mui/material/Dialog";
-import Tooltip from "@mui/material/Tooltip";
-import Close from "@mui/icons-material/Close";
-import Paper from "@mui/material/Paper";
-import Draggable from "react-draggable";
-import { useDispatch, useSelector } from "react-redux";
-import * as yup from "yup";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import { showMessage } from "@fuse/core/FuseMessage/fuseMessageSlice";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Button } from "antd";
-import { LOAD_ROLE_MODULES, LOAD_ROLES } from "../../gql/queries";
+import { useDispatch, useSelector } from "react-redux";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { showMessage } from "@fuse/core/FuseMessage/fuseMessageSlice";
 import {
   selectAllRoles,
   selectSelectedRole,
@@ -39,19 +29,38 @@ import {
   setSelectedPermissions,
   setSelectedRole,
 } from "../../store/systemAccessSlice";
+import { gql } from "@apollo/client";
 
-const rows = [
-  {
-    id: "1",
-    grading_id: "default",
-    description: "The default grading system",
-  },
-  {
-    id: "2",
-    grading_id: "grading_v2020",
-    description: "The updated grading system",
-  },
-];
+// Define GraphQL queries
+const LOAD_ROLES = gql`
+  query Roles {
+    roles {
+      id
+      name
+      description
+      _modules {
+        id
+        title
+        description
+        route
+        logo
+      }
+      permissions
+    }
+  }
+`;
+
+const LOAD_ROLE_MODULES = gql`
+  query Role_modules($roleId: String!) {
+    role_modules(role_id: $roleId) {
+      id
+      title
+      description
+      route
+      logo
+    }
+  }
+`;
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -82,24 +91,12 @@ function stableSort(array, comparator) {
 }
 
 const columns = [
-  { id: "grading_id", label: "Role", minWidth: 10 },
-  {
-    id: "description",
-    numeric: false,
-    // disablePadding: true,
-    label: "Description",
-  },
+  { id: "name", label: "Role", minWidth: 10 },
+  { id: "description", numeric: false, label: "Description" },
 ];
 
 function EnhancedTableHead(props) {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
+  const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -113,17 +110,6 @@ function EnhancedTableHead(props) {
           borderBottomWidth: 1.5,
         }}
       >
-        {/* <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all desserts",
-            }}
-          />
-        </TableCell> */}
         {columns.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -131,8 +117,6 @@ function EnhancedTableHead(props) {
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
             style={{
-              // border: "1px solid #ddd",
-              // padding: "8px",
               textAlign: "left",
               color: "blue",
               opacity: 0.7,
@@ -146,11 +130,6 @@ function EnhancedTableHead(props) {
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
             </TableSortLabel>
           </TableCell>
         ))}
@@ -161,69 +140,86 @@ function EnhancedTableHead(props) {
 
 function RolesTable() {
   const dispatch = useDispatch();
-  const [selected, setSelected] = React.useState([]);
-  const [selectedRow, setSelectedRow] = React.useState(null); //
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [dense, setDense] = React.useState(false);
+  const [orderBy, setOrderBy] = React.useState("name");
   const allRoles = useSelector(selectAllRoles);
   const selectedRole = useSelector(selectSelectedRole);
+
   const [
-    loadRolesModules,
+    loadRoleModules,
     { error: loadErr, loading: loadingModules, data: loadRes },
   ] = useLazyQuery(LOAD_ROLE_MODULES, {
     notifyOnNetworkStatusChange: true,
   });
 
-  useEffect(() => {
-    if (loadRes) {
-      dispatch(setRoleModules(loadRes.role_modules));
-    }
-  }, [loadRes]);
-
-  useEffect(() => {
-    if (loadErr) {
-      dispatch(
-        showMessage({
-          message: loadErr.message,
-          variant: "error",
-        })
-      );
-    }
-  }, [loadErr]);
-
-  useEffect(() => {
-    if (loadingModules) {
-      dispatch(setLoadingRoleModules(loadingModules));
-    } else {
-      dispatch(setLoadingRoleModules(false));
-    }
-  }, [loadingModules]);
-
   const { loading, error, data, refetch } = useQuery(LOAD_ROLES, {
     notifyOnNetworkStatusChange: true,
   });
 
+  // Handle role data
+  useEffect(() => {
+    if (data?.roles) {
+      console.log("Roles data:", data.roles); // Debug
+      dispatch(setAllRoles(data.roles));
+    }
+  }, [data, dispatch]);
+
+  // Handle role modules
+  useEffect(() => {
+    if (loadRes?.role_modules) {
+      console.log("Role modules data:", loadRes.role_modules); // Debug
+      dispatch(setRoleModules(loadRes.role_modules));
+    }
+  }, [loadRes, dispatch]);
+
+  // Handle errors
   useEffect(() => {
     if (error) {
+      console.error("LOAD_ROLES Error:", error); // Debug
       dispatch(
         showMessage({
-          message: error.message,
+          message: `Failed to load roles: ${error.message}`,
           variant: "error",
         })
       );
     }
-  }, [error]);
+  }, [error, dispatch]);
 
-  if (data) {
-    // console.log("data", data);
-    dispatch(setAllRoles(data.all_roles));
-  }
+  useEffect(() => {
+    if (loadErr) {
+      console.error("LOAD_ROLE_MODULES Error:", loadErr); // Debug
+      dispatch(
+        showMessage({
+          message: `Failed to load role modules: ${loadErr.message}`,
+          variant: "error",
+        })
+      );
+    }
+  }, [loadErr, dispatch]);
+
+  // Handle loading state for modules
+  useEffect(() => {
+    dispatch(setLoadingRoleModules(loadingModules));
+  }, [loadingModules, dispatch]);
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
 
   const handleReload = async () => {
-    await refetch();
+    try {
+      await refetch();
+    } catch (err) {
+      console.error("Refetch Error:", err);
+      dispatch(
+        showMessage({
+          message: `Failed to reload roles: ${err.message}`,
+          variant: "error",
+        })
+      );
+    }
   };
 
   const handleCreateNewRole = () => {
@@ -231,25 +227,27 @@ function RolesTable() {
   };
 
   const handleRowClick = async (event, row) => {
+    console.log("Selected role ID:", row.id); // Debug
     dispatch(setSelectedRole(row));
     dispatch(
       setSelectedPermissions(row.permissions ? JSON.parse(row.permissions) : [])
     );
-    // load the modules
-
-    const res = await loadRolesModules({
-      variables: {
-        roleId: row.role_id,
-      },
-    });
-
-    dispatch(setRoleModules(res.data.role_modules));
+    try {
+      await loadRoleModules({
+        variables: {
+          roleId: String(row.id), // Ensure string type
+        },
+      });
+    } catch (err) {
+      console.error("loadRoleModules Error:", err);
+    }
   };
 
-  const visibleRows = React.useMemo(() => allRoles, [order, allRoles]);
+  const visibleRows = React.useMemo(
+    () => stableSort(allRoles, getComparator(order, orderBy)),
+    [order, orderBy, allRoles]
+  );
 
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
   return (
     <div className="p-16">
       <Card
@@ -263,9 +261,7 @@ function RolesTable() {
         }}
       >
         <Box
-          sx={{
-            backgroundColor: "#1e293b",
-          }}
+          sx={{ backgroundColor: "#1e293b" }}
           className="p-10"
           style={{
             paddingLeft: 15,
@@ -279,70 +275,34 @@ function RolesTable() {
             variant="h6"
             color="inherit"
             component="div"
-            style={{
-              //   opacity: 0.7,
-              color: "white",
-            }}
+            style={{ color: "white" }}
           >
             Roles
           </Typography>
-
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
-            {/* <Tooltip title="Create new grading system">
-              <Add
-                onClick={() => handleClickOpen()}
-                fontSize=""
-                color="white"
-                style={{
-                  color: "white",
-                  fontSize: 25,
-                  cursor: "pointer",
-                  marginRight: 10,
-                }}
-              />
-            </Tooltip> */}
-
+          <div style={{ display: "flex" }}>
             <Button
               color="default"
               size="small"
-              style={{
-                color: "white",
-                marginRight: 5,
-              }}
+              style={{ color: "white", marginRight: 5 }}
               onClick={handleCreateNewRole}
               variant="text"
               icon={
                 <Add
-                  style={{
-                    color: "white",
-                    fontSize: 25,
-                    cursor: "pointer",
-                  }}
+                  style={{ color: "white", fontSize: 25, cursor: "pointer" }}
                 />
               }
             >
               Create New Role
             </Button>
-
             <Button
               color="default"
               size="small"
-              style={{
-                color: "white",
-              }}
+              style={{ color: "white" }}
               onClick={handleReload}
               variant="text"
               icon={
                 <Refresh
-                  style={{
-                    color: "white",
-                    fontSize: 25,
-                    cursor: "pointer",
-                  }}
+                  style={{ color: "white", fontSize: 25, cursor: "pointer" }}
                 />
               }
             >
@@ -351,130 +311,94 @@ function RolesTable() {
           </div>
         </Box>
         <div className="max-w-full relative">
-          <TableContainer
-            sx={{
-              maxHeight: "calc(100vh -180px)",
-              minHeight: "calc(100vh - 180px)",
-            }}
-          >
-            <Table
-              //   sx={{ minWidth: 750 }}
-              aria-labelledby="tableTitle"
-              size={"small"}
-              stickyHeader
-              style={{
-                borderCollapse: "collapse",
-                width: "100%",
+          {error ? (
+            <Box p={2} textAlign="center">
+              <Typography color="error">
+                Failed to load roles. Please try again.
+              </Typography>
+              <Button onClick={handleReload}>Retry</Button>
+            </Box>
+          ) : (
+            <TableContainer
+              sx={{
+                maxHeight: "calc(100vh - 180px)",
+                minHeight: "calc(100vh - 180px)",
               }}
-              aria-label="sticky table"
             >
-              <EnhancedTableHead
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
-                // onSelectAllClick={handleSelectAllClick}
-                // onRequestSort={handleRequestSort}
-                rowCount={rows.length}
-              />
-              <Backdrop
-                sx={{
-                  color: "#fff",
-                  position: "absolute",
-                  left: 0,
-                  zIndex: (theme) => theme.zIndex.drawer + 1,
-                }}
-                open={loading}
-                // onClick={handleClose}
+              <Table
+                aria-labelledby="tableTitle"
+                size="small"
+                stickyHeader
+                style={{ borderCollapse: "collapse", width: "100%" }}
+                aria-label="sticky table"
               >
-                <CircularProgress color="inherit" />
-              </Backdrop>
-              <TableBody>
-                {visibleRows.map((row, index) => {
-                  const isSelected = row.role_id === selectedRole?.role_id;
-                  // const isSelected = "1";
-                  const labelId = `enhanced-table-checkbox-${index}`;
+                <EnhancedTableHead
+                  order={order}
+                  orderBy={orderBy}
+                  onRequestSort={handleRequestSort}
+                  rowCount={allRoles.length}
+                />
+                <Backdrop
+                  sx={{
+                    color: "#fff",
+                    position: "absolute",
+                    left: 0,
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                  }}
+                  open={loading}
+                >
+                  <CircularProgress color="inherit" />
+                </Backdrop>
+                <TableBody>
+                  {visibleRows.map((row, index) => {
+                    const isSelected = row.id === selectedRole?.id;
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleRowClick(event, row)}
-                      //   role="checkbox"
-                      //   aria-checked={isItemSelected}
-                      //   tabIndex={-1}
-
-                      key={row.id}
-                      selected={isSelected}
-                      sx={{
-                        cursor: "pointer",
-                        fontSize: 13,
-                        padding: 5,
-                        // backgroundColor: "lightblue",
-                      }}
-                    >
-                      {/* <TableCell
-                        padding="checkbox"
-                        style={{
-                          border: "1px solid #ddd",
-                          // padding: "8px",
-                          textAlign: "left",
-                        }}
+                    return (
+                      <TableRow
+                        hover
+                        onClick={(event) => handleRowClick(event, row)}
+                        key={row.id}
+                        selected={isSelected}
+                        sx={{ cursor: "pointer", fontSize: 13 }}
                       >
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "8px",
+                            whiteSpace: "nowrap",
+                            textAlign: "left",
+                            fontSize: 13,
                           }}
-                        />
-                      </TableCell> */}
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                        style={{
-                          border: "1px solid #ddd",
-                          padding: "8px",
-                          //   paddingLeft: 10,
-                          whiteSpace: "nowrap",
-                          textAlign: "left",
-                          fontSize: 13,
-                        }}
-                      >
-                        {row.role_name}
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                        style={{
-                          border: "1px solid #ddd",
-                          // padding: "8px",
-
-                          whiteSpace: "nowrap",
-                          paddingLeft: 10,
-                          textAlign: "left",
-                          fontSize: 13,
-                        }}
-                      >
-                        {row.description}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                        >
+                          {row.name}
+                        </TableCell>
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "8px",
+                            whiteSpace: "nowrap",
+                            textAlign: "left",
+                            fontSize: 13,
+                          }}
+                        >
+                          {row.description}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
         </div>
       </Card>
     </div>
