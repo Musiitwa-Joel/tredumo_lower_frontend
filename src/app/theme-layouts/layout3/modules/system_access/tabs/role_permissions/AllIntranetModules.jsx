@@ -8,17 +8,36 @@ import {
 } from "../../store/systemAccessSlice";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { showMessage } from "@fuse/core/FuseMessage/fuseMessageSlice";
-import { UPDATE_ROLE_MODULES } from "../../gql/mutations";
+
+const LOAD_MODULES = gql`
+  query Apps {
+    apps {
+      id
+      title
+      description
+      route
+      logo
+    }
+  }
+`;
+
+const UPDATE_ROLE_MODULES = gql`
+  mutation UpdateRoleModules($payload: RoleModuleInput!) {
+    updateRoleModules(payload: $payload) {
+      success
+      message
+    }
+  }
+`;
 
 const columns = [
   {
     title: "#",
     dataIndex: "index",
-    key: "date",
+    key: "index",
     render: (text, record, index) => index + 1,
     width: 50,
   },
-
   {
     title: "Name",
     dataIndex: "title",
@@ -30,36 +49,19 @@ const columns = [
   },
 ];
 
-const LOAD_MODULES = gql`
-  query loadAllApps {
-    modules {
-      id
-      title
-      description
-    }
-  }
-`;
-const dataSource = Array.from({
-  length: 46,
-}).map((_, i) => ({
-  key: i,
-  name: `Edward King ${i}`,
-  age: 32,
-  address: `London, Park Lane no. ${i}`,
-}));
-
 const AllIntranetModules = () => {
   const dispatch = useDispatch();
   const selectedRole = useSelector(selectSelectedRole);
   const modalOpen = useSelector(selectAllIntranetModulesVisible);
   const { loading: loadingModules, error, data } = useQuery(LOAD_MODULES);
-
   const [
     updateRoleModules,
     { error: updateErr, loading: updatingModules, data: updateRes },
   ] = useMutation(UPDATE_ROLE_MODULES, {
     refetchQueries: ["loadRoleModules"],
   });
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   useEffect(() => {
     if (error) {
@@ -79,51 +81,50 @@ const AllIntranetModules = () => {
         })
       );
     }
-  }, [error, updateErr]);
-
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  }, [error, updateErr, dispatch]);
 
   const onSelectChange = (newSelectedRowKeys) => {
-    // console.log("Selected Row Keys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
-
-    // Build the object array
-    // const _selectedModules = data?.modules
-    //   ?.filter((module) => newSelectedRowKeys.includes(module.id)) // Select only matching modules
-    //   ?.map((module) => ({
-    //     module_id: module.id,
-    //     permissions: [], // Initialize with an empty permissions array
-    //   }));
-
-    // setSelectedModules(_selectedModules);
-
-    // console.log("Generated Object Array: ", selectedModules);
   };
 
   const handleAddSelections = async () => {
-    // update the role permissions
-    const payload = {
-      payload: {
-        role_id: selectedRole?.role_id,
-        module_ids: selectedRowKeys,
-      },
-    };
-
-    // console.log("payload", payload);
-    const res = await updateRoleModules({
-      variables: payload,
-    });
-
-    if (res.data.updateRoleModules) {
+    if (!selectedRole?.role_id) {
       dispatch(
         showMessage({
-          message: res.data.updateRoleModules.message,
-          variant: "success",
+          message: "No role selected",
+          variant: "error",
         })
       );
+      return;
+    }
 
-      dispatch(setAllIntranetModulesVisible(false));
-      setSelectedRowKeys([]);
+    const payload = {
+      role_id: selectedRole.role_id,
+      module_ids: selectedRowKeys,
+    };
+
+    try {
+      const res = await updateRoleModules({
+        variables: { payload },
+      });
+
+      if (res.data?.updateRoleModules?.success) {
+        dispatch(
+          showMessage({
+            message: res.data.updateRoleModules.message,
+            variant: "success",
+          })
+        );
+        dispatch(setAllIntranetModulesVisible(false));
+        setSelectedRowKeys([]);
+      }
+    } catch (err) {
+      dispatch(
+        showMessage({
+          message: "Failed to update role modules",
+          variant: "error",
+        })
+      );
     }
   };
 
@@ -136,9 +137,7 @@ const AllIntranetModules = () => {
   return (
     <Modal
       title="All Apps"
-      style={{
-        top: 20,
-      }}
+      style={{ top: 20 }}
       open={modalOpen}
       okText="Add Selected Apps"
       onOk={handleAddSelections}
@@ -151,24 +150,16 @@ const AllIntranetModules = () => {
     >
       <Flex gap="middle" vertical>
         <Flex align="center" gap="middle">
-          {/* <Button
-            type="primary"
-            onClick={start}
-            disabled={!hasSelected}
-            loading={loading}
-          >
-            Reload
-          </Button> */}
           {hasSelected ? `Selected ${selectedRowKeys.length} Apps` : null}
         </Flex>
         <Table
           rowSelection={rowSelection}
           loading={loadingModules}
-          rowKey={"id"}
+          rowKey="id"
           pagination={false}
           size="small"
           columns={columns}
-          dataSource={data?.modules ? data.modules : []}
+          dataSource={data?.apps || []}
           scroll={{
             y: "calc(100vh - 400px)",
           }}
@@ -177,4 +168,5 @@ const AllIntranetModules = () => {
     </Modal>
   );
 };
+
 export default AllIntranetModules;

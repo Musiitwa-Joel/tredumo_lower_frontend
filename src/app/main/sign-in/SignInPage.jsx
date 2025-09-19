@@ -101,7 +101,7 @@ function SignInPage() {
 
       if (response.data?.login?.success) {
         localStorage.setItem("jwt_access_token", response.data.login.token);
-        dispatch(setToken(response.data.login.token));
+        dispatch(setToken(response?.data?.login?.token));
         dispatch(setInitialUserProfile(response.data.login.user));
 
         navigate("/example");
@@ -238,7 +238,7 @@ function SignInPage() {
                 backgroundColor:
                   _.isEmpty(dirtyFields) || !isValid
                     ? ""
-                    : appTheme?.primary_color || "#9b4005",
+                    : appTheme?.primary_color,
                 color: _.isEmpty(dirtyFields) || !isValid ? "" : "#fff",
               }}
             >

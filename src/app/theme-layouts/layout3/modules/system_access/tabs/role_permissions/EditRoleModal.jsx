@@ -35,7 +35,8 @@ const EditRoleModal = () => {
 
   useEffect(() => {
     form.setFieldsValue({
-      role_name: selectedRole?.role_name,
+      // RolesTable provides `name` and `id` (not `role_name`/`role_id`), map accordingly
+      role_name: selectedRole?.name,
       description: selectedRole?.description,
     });
   }, [selectedRole]);
@@ -55,7 +56,8 @@ const EditRoleModal = () => {
       payload: {
         role_name: values.role_name,
         description: values.description,
-        id: selectedRole.role_id ? selectedRole.role_id : null,
+        // Use `id` from the selected role (RolesTable sets `id`).
+        id: selectedRole?.id ?? null,
       },
     };
 

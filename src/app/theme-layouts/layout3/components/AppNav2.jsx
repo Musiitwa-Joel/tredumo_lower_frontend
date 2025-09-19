@@ -29,7 +29,6 @@ const AppNav2 = ({
         style={{
           display: "flex",
           justifyContent: "space-between",
-          backgroundColor: "red",
         }}
       >
         {/* Logo & Title */}

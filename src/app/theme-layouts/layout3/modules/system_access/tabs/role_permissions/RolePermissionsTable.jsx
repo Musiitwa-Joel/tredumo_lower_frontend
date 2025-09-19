@@ -40,7 +40,10 @@ function RolePermissionsTable() {
 
   const dispatch = useDispatch();
   const [deleteRole, { error, loading }] = useMutation(DELETE_ROLE, {
-    refetchQueries: ["loadRoles"],
+    // Refetch the roles query by operation name used in RolesTable (`query All_roles`)
+    refetchQueries: ["All_roles"],
+    // Wait for refetch to finish before resolving the mutation promise
+    awaitRefetchQueries: true,
   });
 
   useEffect(() => {
@@ -55,15 +58,61 @@ function RolePermissionsTable() {
   }, [error]);
 
   const handleDelete = async () => {
-    const res = await deleteRole({
-      variables: {
-        roleId: selectedRole?.role_id,
-      },
-    });
+    try {
+      const rawId = selectedRole?.id ?? selectedRole?.role_id;
+      console.log(
+        "Deleting role, selectedRole:",
+        selectedRole,
+        "rawId:",
+        rawId
+      );
 
-    // after deleting, remove the selected role from the store
-    dispatch(setSelectedRole(null));
-    dispatch(setDeleteModalVisible(false));
+      if (rawId === undefined || rawId === null) {
+        console.error("No role id available for deletion");
+        dispatch(
+          showMessage({
+            message: "No role selected to delete",
+            variant: "error",
+          })
+        );
+        return;
+      }
+
+      // If rawId is a boolean or the string 'true'/'false', that's unexpected.
+      if (typeof rawId === "boolean" || rawId === "true" || rawId === "false") {
+        console.error("Unexpected role id type/value for deletion:", rawId);
+        dispatch(
+          showMessage({
+            message: `Invalid role id for delete: ${String(rawId)}`,
+            variant: "error",
+          })
+        );
+        return;
+      }
+
+      const roleId = String(rawId);
+      console.log("Calling deleteRole with variables:", { roleId });
+
+      const res = await deleteRole({
+        variables: {
+          roleId,
+        },
+      });
+
+      // after deleting, remove the selected role from the store
+      dispatch(setSelectedRole(null));
+      dispatch(setDeleteModalVisible(false));
+      return res;
+    } catch (err) {
+      console.error("Failed to delete role:", err);
+      dispatch(
+        showMessage({
+          message: err.message || "Failed to delete role",
+          variant: "error",
+        })
+      );
+      throw err;
+    }
   };
   return (
     <div className="p-16">
@@ -100,7 +149,7 @@ function RolePermissionsTable() {
             }}
           >
             Modules and Permissions
-            {selectedRole && `: ${selectedRole?.role_name}`}
+            {selectedRole && `: ${selectedRole?.name}`}
           </Typography>
 
           <Space size="middle">
@@ -183,19 +232,9 @@ function RolePermissionsTable() {
         open={deleteModalVisible}
         onOk={async () => {
           try {
-            // Perform the delete operation
-            await deleteRole({
-              variables: { roleId: selectedRole?.role_id },
-            });
-
-            // Close the modal after successful deletion
-            dispatch(setDeleteModalVisible(false));
-
-            // Optionally clear the selected role
-            dispatch(setSelectedRole(null));
+            await handleDelete();
           } catch (err) {
-            console.error("Failed to delete role:", err);
-            // You can add an error notification here
+            // error already logged in handleDelete
           }
         }}
         onCancel={() => dispatch(setDeleteModalVisible(false))}

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import clsx from "clsx";
@@ -33,8 +33,8 @@ import { gql } from "@apollo/client";
 
 // Define GraphQL queries
 const LOAD_ROLES = gql`
-  query Roles {
-    roles {
+  query All_roles {
+    all_roles {
       id
       name
       description
@@ -144,6 +144,7 @@ function RolesTable() {
   const [orderBy, setOrderBy] = React.useState("name");
   const allRoles = useSelector(selectAllRoles);
   const selectedRole = useSelector(selectSelectedRole);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   const [
     loadRoleModules,
@@ -154,40 +155,53 @@ function RolesTable() {
 
   const { loading, error, data, refetch } = useQuery(LOAD_ROLES, {
     notifyOnNetworkStatusChange: true,
+    fetchPolicy: "network-only",
+    errorPolicy: "all", // Handle partial data gracefully
   });
 
   // Handle role data
   useEffect(() => {
-    if (data?.roles) {
-      console.log("Roles data:", data.roles); // Debug
-      dispatch(setAllRoles(data.roles));
+    if (data?.all_roles) {
+      console.log("Roles data:", data.all_roles);
+      dispatch(setAllRoles(data.all_roles));
+      setIsInitialLoading(false); // Stop initial loading once data is received
+    } else if (data && !data.all_roles) {
+      console.warn("All_roles query returned null");
+      dispatch(setAllRoles([]));
+      setIsInitialLoading(false);
     }
   }, [data, dispatch]);
 
   // Handle role modules
   useEffect(() => {
     if (loadRes?.role_modules) {
-      console.log("Role modules data:", loadRes.role_modules); // Debug
+      console.log("Role modules data:", loadRes.role_modules);
       dispatch(setRoleModules(loadRes.role_modules));
     }
   }, [loadRes, dispatch]);
 
-  // Handle errors
+  // Handle errors with debouncing
   useEffect(() => {
     if (error) {
-      console.error("LOAD_ROLES Error:", error); // Debug
-      dispatch(
-        showMessage({
-          message: `Failed to load roles: ${error.message}`,
-          variant: "error",
-        })
-      );
+      console.error("LOAD_ROLES Error:", error);
+      // Only show error if it persists after retries
+      const timeout = setTimeout(() => {
+        if (error && !data?.all_roles) {
+          dispatch(
+            showMessage({
+              message: `Failed to load roles: ${error.message}`,
+              variant: "error",
+            })
+          );
+        }
+      }, 2000); // Delay error message to avoid flashing on retries
+      return () => clearTimeout(timeout);
     }
-  }, [error, dispatch]);
+  }, [error, data, dispatch]);
 
   useEffect(() => {
     if (loadErr) {
-      console.error("LOAD_ROLE_MODULES Error:", loadErr); // Debug
+      console.error("LOAD_ROLE_MODULES Error:", loadErr);
       dispatch(
         showMessage({
           message: `Failed to load role modules: ${loadErr.message}`,
@@ -209,6 +223,7 @@ function RolesTable() {
   };
 
   const handleReload = async () => {
+    setIsInitialLoading(true); // Show loading indicator during refetch
     try {
       await refetch();
     } catch (err) {
@@ -219,6 +234,8 @@ function RolesTable() {
           variant: "error",
         })
       );
+    } finally {
+      setIsInitialLoading(false);
     }
   };
 
@@ -227,7 +244,7 @@ function RolesTable() {
   };
 
   const handleRowClick = async (event, row) => {
-    console.log("Selected role ID:", row.id); // Debug
+    console.log("Selected role ID:", row.id);
     dispatch(setSelectedRole(row));
     dispatch(
       setSelectedPermissions(row.permissions ? JSON.parse(row.permissions) : [])
@@ -235,11 +252,17 @@ function RolesTable() {
     try {
       await loadRoleModules({
         variables: {
-          roleId: String(row.id), // Ensure string type
+          roleId: String(row.id),
         },
       });
     } catch (err) {
       console.error("loadRoleModules Error:", err);
+      dispatch(
+        showMessage({
+          message: `Failed to load modules for role: ${err.message}`,
+          variant: "error",
+        })
+      );
     }
   };
 
@@ -311,10 +334,21 @@ function RolesTable() {
           </div>
         </Box>
         <div className="max-w-full relative">
-          {error ? (
+          <Backdrop
+            sx={{
+              color: "#fff",
+              position: "absolute",
+              left: 0,
+              zIndex: (theme) => theme.zIndex.drawer + 1,
+            }}
+            open={isInitialLoading || loading}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+          {error && !data?.all_roles ? (
             <Box p={2} textAlign="center">
               <Typography color="error">
-                Failed to load roles. Please try again.
+                Failed to load roles: {error.message}
               </Typography>
               <Button onClick={handleReload}>Retry</Button>
             </Box>
@@ -338,17 +372,6 @@ function RolesTable() {
                   onRequestSort={handleRequestSort}
                   rowCount={allRoles.length}
                 />
-                <Backdrop
-                  sx={{
-                    color: "#fff",
-                    position: "absolute",
-                    left: 0,
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
-                  }}
-                  open={loading}
-                >
-                  <CircularProgress color="inherit" />
-                </Backdrop>
                 <TableBody>
                   {visibleRows.map((row, index) => {
                     const isSelected = row.id === selectedRole?.id;

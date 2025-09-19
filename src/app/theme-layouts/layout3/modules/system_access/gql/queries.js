@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 const LOAD_ROLES = gql`
-  query Roles {
-    roles {
+  query All_roles {
+    all_roles {
       id
       name
       description

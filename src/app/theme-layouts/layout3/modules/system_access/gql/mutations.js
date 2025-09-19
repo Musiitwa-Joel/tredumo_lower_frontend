@@ -1,10 +1,10 @@
 import { gql } from "@apollo/client";
 
 const SAVE_ROLE = gql`
-  mutation saveRole($payload: RoleInput!) {
+  mutation SaveRole($payload: RoleInput!) {
     saveRole(payload: $payload) {
-      message
       success
+      message
     }
   }
 `;
@@ -19,7 +19,7 @@ const DELETE_ROLE = gql`
 `;
 
 const UPDATE_ROLE_MODULES = gql`
-  mutation updateRoleModules($payload: RoleModuleInput!) {
+  mutation UpdateRoleModules($payload: RoleModuleInput!) {
     updateRoleModules(payload: $payload) {
       success
       message
